@@ -83,10 +83,19 @@ class BlockChain{
         let balance = 0;
 
         for(const block of this.chain) {
-            for(const trans of this.transaction){
+            for(const trans of block.transaction){
+                if(trans.toAddress === address) {
+                    balance += trans.amount;
+                }
+
+                if(trans.fromAddress === address) {
+                    balance += trans.amount;
+                }
                 
             }
         }
+
+        return balance;
     }
 
 
@@ -113,17 +122,13 @@ class BlockChain{
 
 let TCoin = new BlockChain();
 
-console.log('Mining Block 1 ...')
-TCoin.addBlock(new Block("01/01/2019", { amount: 2 }));
-console.log('Mining Block 2 ...')
-TCoin.addBlock(new Block("01/02/2019", { amount: 3 }));
-TCoin.addBlock(new Block("01/03/2019", { amount: 4 }));
-TCoin.addBlock(new Block("01/04/2019", { amount: 5 }));
+TCoin.createTransaction(new Transaction('address1', 'address2', 100));
+TCoin.createTransaction(new Transaction('address2', 'address1', 50));
+TCoin.createTransaction(new Transaction('address1', 'address3', 20));
 
-// console.log('>>> Is Block Chain is valid? ' + TCoin.isChainValid());
 
-// TCoin.chain[1].data = { amount: 100 };
+TCoin.minePendingTransactions('Dongs address');
 
-// console.log('>>> Is Block Chain is valid? ' + TCoin.isChainValid());
+console.log('Balance of Dong, ' + TCoin.getBalanceOfAddress('Dongs address'));
 
-// console.log(JSON.stringify(TCoin, null, 2));
+
